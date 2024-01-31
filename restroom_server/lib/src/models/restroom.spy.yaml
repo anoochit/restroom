@@ -1,0 +1,4 @@
+class: Restroom
+table: restrooms
+fields:
+  name: String

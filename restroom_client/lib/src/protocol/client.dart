@@ -10,7 +10,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'protocol.dart' as _i3;
+import 'package:restroom_client/src/protocol/models/rating.dart' as _i3;
+import 'package:restroom_client/src/protocol/models/restroom.dart' as _i4;
+import 'package:serverpod_auth_client/module.dart' as _i5;
+import 'protocol.dart' as _i6;
 
 /// {@category Endpoint}
 class EndpointExample extends _i1.EndpointRef {
@@ -26,6 +29,44 @@ class EndpointExample extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointRating extends _i1.EndpointRef {
+  EndpointRating(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'rating';
+
+  _i2.Future<_i3.Rating> createRating(_i3.Rating rating) =>
+      caller.callServerEndpoint<_i3.Rating>(
+        'rating',
+        'createRating',
+        {'rating': rating},
+      );
+}
+
+/// {@category Endpoint}
+class EndpointRestroom extends _i1.EndpointRef {
+  EndpointRestroom(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'restroom';
+
+  _i2.Future<_i4.Restroom> registerRoom(_i4.Restroom restroom) =>
+      caller.callServerEndpoint<_i4.Restroom>(
+        'restroom',
+        'registerRoom',
+        {'restroom': restroom},
+      );
+}
+
+class _Modules {
+  _Modules(Client client) {
+    auth = _i5.Caller(client);
+  }
+
+  late final _i5.Caller auth;
+}
+
 class Client extends _i1.ServerpodClient {
   Client(
     String host, {
@@ -35,20 +76,34 @@ class Client extends _i1.ServerpodClient {
     Duration? connectionTimeout,
   }) : super(
           host,
-          _i3.Protocol(),
+          _i6.Protocol(),
           securityContext: securityContext,
           authenticationKeyManager: authenticationKeyManager,
           streamingConnectionTimeout: streamingConnectionTimeout,
           connectionTimeout: connectionTimeout,
         ) {
     example = EndpointExample(this);
+    rating = EndpointRating(this);
+    restroom = EndpointRestroom(this);
+    modules = _Modules(this);
   }
 
   late final EndpointExample example;
 
-  @override
-  Map<String, _i1.EndpointRef> get endpointRefLookup => {'example': example};
+  late final EndpointRating rating;
+
+  late final EndpointRestroom restroom;
+
+  late final _Modules modules;
 
   @override
-  Map<String, _i1.ModuleEndpointCaller> get moduleLookup => {};
+  Map<String, _i1.EndpointRef> get endpointRefLookup => {
+        'example': example,
+        'rating': rating,
+        'restroom': restroom,
+      };
+
+  @override
+  Map<String, _i1.ModuleEndpointCaller> get moduleLookup =>
+      {'auth': modules.auth};
 }

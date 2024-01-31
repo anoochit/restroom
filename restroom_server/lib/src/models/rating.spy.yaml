@@ -1,0 +1,6 @@
+class: Rating
+table: ratings
+fields:
+  timestamp: DateTime
+  score: int
+  room: Restroom?, relation
