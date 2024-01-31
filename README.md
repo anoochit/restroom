@@ -6,7 +6,7 @@ A simple restroom rating kiosk app.
 
 Start server
 
-```bash
+```shell
 cd restroom_server
 docker compose up --build -d
 dart bin/main.dart  --apply-migrations
