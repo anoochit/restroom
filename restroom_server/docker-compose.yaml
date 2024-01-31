@@ -18,5 +18,12 @@ services:
     command: redis-server --requirepass "05uS1d3pqm_REqQeGRFUAj8CF6nDNjH-"
     environment:
       - REDIS_REPLICATION_MODE=master
+  adminer:
+    image: adminer
+    container_name: adminer
+    depends_on:
+      - "postgres"    
+    ports:
+      - 8800:8080
 volumes:
   restroom_data:
