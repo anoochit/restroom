@@ -3,4 +3,4 @@ table: ratings
 fields:
   timestamp: DateTime
   score: int
-  room: Restroom?, relation
+  room: Restroom?, relation(name=restroom_rates)

@@ -4,3 +4,5 @@ rating:
   - createRating:
 restroom:
   - registerRoom:
+  - getRestRooms:
+  - getRestRoom:

@@ -1,0 +1,60 @@
+{
+  "actions": [
+    {
+      "type": "alterTable",
+      "alterTable": {
+        "name": "ratings",
+        "schema": "public",
+        "addColumns": [],
+        "deleteColumns": [
+          "roomId"
+        ],
+        "modifyColumns": [],
+        "addIndexes": [],
+        "deleteIndexes": [],
+        "addForeignKeys": [
+          {
+            "constraintName": "ratings_fk_0",
+            "columns": [
+              "_restroomsRatingRestroomsId"
+            ],
+            "referenceTable": "restrooms",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "deleteForeignKeys": [
+          "ratings_fk_1",
+          "ratings_fk_0"
+        ],
+        "warnings": [
+          {
+            "type": "columnDropped",
+            "message": "Column \"roomId\" of table \"ratings\" will be dropped.",
+            "table": "ratings",
+            "columns": [
+              "roomId"
+            ],
+            "destrucive": true
+          }
+        ]
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"roomId\" of table \"ratings\" will be dropped.",
+      "table": "ratings",
+      "columns": [
+        "roomId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

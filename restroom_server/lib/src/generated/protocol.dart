@@ -15,6 +15,8 @@ import 'package:serverpod_auth_server/module.dart' as _i3;
 import 'models/example.dart' as _i4;
 import 'models/rating.dart' as _i5;
 import 'models/restroom.dart' as _i6;
+import 'protocol.dart' as _i7;
+import 'package:restroom_server/src/generated/models/restroom.dart' as _i8;
 export 'models/example.dart';
 export 'models/rating.dart';
 export 'models/restroom.dart';
@@ -158,6 +160,15 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == _i1.getType<_i6.Restroom?>()) {
       return (data != null ? _i6.Restroom.fromJson(data, this) : null) as T;
+    }
+    if (t == _i1.getType<List<_i7.Rating>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i7.Rating>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == List<_i8.Restroom>) {
+      return (data as List).map((e) => deserialize<_i8.Restroom>(e)).toList()
+          as dynamic;
     }
     try {
       return _i3.Protocol().deserialize<T>(data, t);

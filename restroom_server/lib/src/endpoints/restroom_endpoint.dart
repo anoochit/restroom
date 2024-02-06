@@ -15,4 +15,20 @@ class RestroomEndpoint extends Endpoint {
       return roomExist.first;
     }
   }
+
+  Future<List<Restroom>> getRestRooms(Session session) async {
+    final restrooms = await Restroom.db.find(session);
+    return restrooms;
+  }
+
+  Future<List<Restroom>> getRestRoom(Session session, int id) async {
+    final restrooms = await Restroom.db.find(
+      session,
+      where: (t) => (t.id.equals(id)),
+      include: Restroom.include(
+        rating: Rating.includeList(),
+      ),
+    );
+    return restrooms;
+  }
 }

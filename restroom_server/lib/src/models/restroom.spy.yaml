@@ -2,3 +2,4 @@ class: Restroom
 table: restrooms
 fields:
   name: String
+  rating: List<Rating>?, relation(name=restroom_rates)

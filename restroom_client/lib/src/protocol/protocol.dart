@@ -13,7 +13,9 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'models/example.dart' as _i2;
 import 'models/rating.dart' as _i3;
 import 'models/restroom.dart' as _i4;
-import 'package:serverpod_auth_client/module.dart' as _i5;
+import 'protocol.dart' as _i5;
+import 'package:restroom_client/src/protocol/models/restroom.dart' as _i6;
+import 'package:serverpod_auth_client/module.dart' as _i7;
 export 'models/example.dart';
 export 'models/rating.dart';
 export 'models/restroom.dart';
@@ -55,8 +57,17 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i4.Restroom?>()) {
       return (data != null ? _i4.Restroom.fromJson(data, this) : null) as T;
     }
+    if (t == _i1.getType<List<_i5.Rating>?>()) {
+      return (data != null
+          ? (data as List).map((e) => deserialize<_i5.Rating>(e)).toList()
+          : null) as dynamic;
+    }
+    if (t == List<_i6.Restroom>) {
+      return (data as List).map((e) => deserialize<_i6.Restroom>(e)).toList()
+          as dynamic;
+    }
     try {
-      return _i5.Protocol().deserialize<T>(data, t);
+      return _i7.Protocol().deserialize<T>(data, t);
     } catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -64,7 +75,7 @@ class Protocol extends _i1.SerializationManager {
   @override
   String? getClassNameForObject(Object data) {
     String? className;
-    className = _i5.Protocol().getClassNameForObject(data);
+    className = _i7.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth.$className';
     }
@@ -84,7 +95,7 @@ class Protocol extends _i1.SerializationManager {
   dynamic deserializeByClassName(Map<String, dynamic> data) {
     if (data['className'].startsWith('serverpod_auth.')) {
       data['className'] = data['className'].substring(15);
-      return _i5.Protocol().deserializeByClassName(data);
+      return _i7.Protocol().deserializeByClassName(data);
     }
     if (data['className'] == 'Example') {
       return deserialize<_i2.Example>(data['data']);

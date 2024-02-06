@@ -9,16 +9,20 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
+import '../protocol.dart' as _i2;
+import 'package:serverpod_serialization/serverpod_serialization.dart';
 
 abstract class Restroom extends _i1.TableRow {
   Restroom._({
     int? id,
     required this.name,
+    this.rating,
   }) : super(id);
 
   factory Restroom({
     int? id,
     required String name,
+    List<_i2.Rating>? rating,
   }) = _RestroomImpl;
 
   factory Restroom.fromJson(
@@ -28,6 +32,8 @@ abstract class Restroom extends _i1.TableRow {
     return Restroom(
       id: serializationManager.deserialize<int?>(jsonSerialization['id']),
       name: serializationManager.deserialize<String>(jsonSerialization['name']),
+      rating: serializationManager
+          .deserialize<List<_i2.Rating>?>(jsonSerialization['rating']),
     );
   }
 
@@ -37,18 +43,23 @@ abstract class Restroom extends _i1.TableRow {
 
   String name;
 
+  List<_i2.Rating>? rating;
+
   @override
   _i1.Table get table => t;
 
   Restroom copyWith({
     int? id,
     String? name,
+    List<_i2.Rating>? rating,
   });
   @override
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
       'name': name,
+      if (rating != null)
+        'rating': rating?.toJson(valueToJson: (v) => v.toJson()),
     };
   }
 
@@ -66,6 +77,8 @@ abstract class Restroom extends _i1.TableRow {
     return {
       if (id != null) 'id': id,
       'name': name,
+      if (rating != null)
+        'rating': rating?.toJson(valueToJson: (v) => v.allToJson()),
     };
   }
 
@@ -98,6 +111,7 @@ abstract class Restroom extends _i1.TableRow {
     bool orderDescending = false,
     bool useCache = true,
     _i1.Transaction? transaction,
+    RestroomInclude? include,
   }) async {
     return session.db.find<Restroom>(
       where: where != null ? where(Restroom.t) : null,
@@ -108,6 +122,7 @@ abstract class Restroom extends _i1.TableRow {
       orderDescending: orderDescending,
       useCache: useCache,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -120,6 +135,7 @@ abstract class Restroom extends _i1.TableRow {
     bool orderDescending = false,
     bool useCache = true,
     _i1.Transaction? transaction,
+    RestroomInclude? include,
   }) async {
     return session.db.findSingleRow<Restroom>(
       where: where != null ? where(Restroom.t) : null,
@@ -128,15 +144,20 @@ abstract class Restroom extends _i1.TableRow {
       orderDescending: orderDescending,
       useCache: useCache,
       transaction: transaction,
+      include: include,
     );
   }
 
   @Deprecated('Will be removed in 2.0.0. Use: db.findById instead.')
   static Future<Restroom?> findById(
     _i1.Session session,
-    int id,
-  ) async {
-    return session.db.findById<Restroom>(id);
+    int id, {
+    RestroomInclude? include,
+  }) async {
+    return session.db.findById<Restroom>(
+      id,
+      include: include,
+    );
   }
 
   @Deprecated('Will be removed in 2.0.0. Use: db.deleteWhere instead.')
@@ -204,8 +225,8 @@ abstract class Restroom extends _i1.TableRow {
     );
   }
 
-  static RestroomInclude include() {
-    return RestroomInclude._();
+  static RestroomInclude include({_i2.RatingIncludeList? rating}) {
+    return RestroomInclude._(rating: rating);
   }
 
   static RestroomIncludeList includeList({
@@ -235,19 +256,23 @@ class _RestroomImpl extends Restroom {
   _RestroomImpl({
     int? id,
     required String name,
+    List<_i2.Rating>? rating,
   }) : super._(
           id: id,
           name: name,
+          rating: rating,
         );
 
   @override
   Restroom copyWith({
     Object? id = _Undefined,
     String? name,
+    Object? rating = _Undefined,
   }) {
     return Restroom(
       id: id is int? ? id : this.id,
       name: name ?? this.name,
+      rating: rating is List<_i2.Rating>? ? rating : this.rating?.clone(),
     );
   }
 }
@@ -262,21 +287,68 @@ class RestroomTable extends _i1.Table {
 
   late final _i1.ColumnString name;
 
+  _i2.RatingTable? ___rating;
+
+  _i1.ManyRelation<_i2.RatingTable>? _rating;
+
+  _i2.RatingTable get __rating {
+    if (___rating != null) return ___rating!;
+    ___rating = _i1.createRelationTable(
+      relationFieldName: '__rating',
+      field: Restroom.t.id,
+      foreignField: _i2.Rating.t.roomId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.RatingTable(tableRelation: foreignTableRelation),
+    );
+    return ___rating!;
+  }
+
+  _i1.ManyRelation<_i2.RatingTable> get rating {
+    if (_rating != null) return _rating!;
+    var relationTable = _i1.createRelationTable(
+      relationFieldName: 'rating',
+      field: Restroom.t.id,
+      foreignField: _i2.Rating.t.roomId,
+      tableRelation: tableRelation,
+      createTable: (foreignTableRelation) =>
+          _i2.RatingTable(tableRelation: foreignTableRelation),
+    );
+    _rating = _i1.ManyRelation<_i2.RatingTable>(
+      tableWithRelations: relationTable,
+      table: _i2.RatingTable(
+          tableRelation: relationTable.tableRelation!.lastRelation),
+    );
+    return _rating!;
+  }
+
   @override
   List<_i1.Column> get columns => [
         id,
         name,
       ];
+
+  @override
+  _i1.Table? getRelationTable(String relationField) {
+    if (relationField == 'rating') {
+      return __rating;
+    }
+    return null;
+  }
 }
 
 @Deprecated('Use RestroomTable.t instead.')
 RestroomTable tRestroom = RestroomTable();
 
 class RestroomInclude extends _i1.IncludeObject {
-  RestroomInclude._();
+  RestroomInclude._({_i2.RatingIncludeList? rating}) {
+    _rating = rating;
+  }
+
+  _i2.RatingIncludeList? _rating;
 
   @override
-  Map<String, _i1.Include?> get includes => {};
+  Map<String, _i1.Include?> get includes => {'rating': _rating};
 
   @override
   _i1.Table get table => Restroom.t;
@@ -305,6 +377,10 @@ class RestroomIncludeList extends _i1.IncludeList {
 class RestroomRepository {
   const RestroomRepository._();
 
+  final attach = const RestroomAttachRepository._();
+
+  final attachRow = const RestroomAttachRowRepository._();
+
   Future<List<Restroom>> find(
     _i1.Session session, {
     _i1.WhereExpressionBuilder<RestroomTable>? where,
@@ -314,6 +390,7 @@ class RestroomRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RestroomTable>? orderByList,
     _i1.Transaction? transaction,
+    RestroomInclude? include,
   }) async {
     return session.dbNext.find<Restroom>(
       where: where?.call(Restroom.t),
@@ -323,6 +400,7 @@ class RestroomRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -334,6 +412,7 @@ class RestroomRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RestroomTable>? orderByList,
     _i1.Transaction? transaction,
+    RestroomInclude? include,
   }) async {
     return session.dbNext.findFirstRow<Restroom>(
       where: where?.call(Restroom.t),
@@ -342,6 +421,7 @@ class RestroomRepository {
       orderDescending: orderDescending,
       offset: offset,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -349,10 +429,12 @@ class RestroomRepository {
     _i1.Session session,
     int id, {
     _i1.Transaction? transaction,
+    RestroomInclude? include,
   }) async {
     return session.dbNext.findById<Restroom>(
       id,
       transaction: transaction,
+      include: include,
     );
   }
 
@@ -447,6 +529,52 @@ class RestroomRepository {
       where: where?.call(Restroom.t),
       limit: limit,
       transaction: transaction,
+    );
+  }
+}
+
+class RestroomAttachRepository {
+  const RestroomAttachRepository._();
+
+  Future<void> rating(
+    _i1.Session session,
+    Restroom restroom,
+    List<_i2.Rating> rating,
+  ) async {
+    if (rating.any((e) => e.id == null)) {
+      throw ArgumentError.notNull('rating.id');
+    }
+    if (restroom.id == null) {
+      throw ArgumentError.notNull('restroom.id');
+    }
+
+    var $rating = rating.map((e) => e.copyWith(roomId: restroom.id)).toList();
+    await session.dbNext.update<_i2.Rating>(
+      $rating,
+      columns: [_i2.Rating.t.roomId],
+    );
+  }
+}
+
+class RestroomAttachRowRepository {
+  const RestroomAttachRowRepository._();
+
+  Future<void> rating(
+    _i1.Session session,
+    Restroom restroom,
+    _i2.Rating rating,
+  ) async {
+    if (rating.id == null) {
+      throw ArgumentError.notNull('rating.id');
+    }
+    if (restroom.id == null) {
+      throw ArgumentError.notNull('restroom.id');
+    }
+
+    var $rating = rating.copyWith(roomId: restroom.id);
+    await session.dbNext.updateRow<_i2.Rating>(
+      $rating,
+      columns: [_i2.Rating.t.roomId],
     );
   }
 }

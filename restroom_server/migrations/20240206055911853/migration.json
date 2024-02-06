@@ -1,0 +1,95 @@
+{
+  "actions": [
+    {
+      "type": "deleteTable",
+      "deleteTable": "ratings"
+    },
+    {
+      "type": "createTable",
+      "createTable": {
+        "name": "ratings",
+        "dartName": "Rating",
+        "module": "restroom",
+        "schema": "public",
+        "columns": [
+          {
+            "name": "id",
+            "columnType": 2,
+            "isNullable": false,
+            "columnDefault": "nextval('ratings_id_seq'::regclass)",
+            "dartType": "int?"
+          },
+          {
+            "name": "timestamp",
+            "columnType": 4,
+            "isNullable": false,
+            "dartType": "DateTime"
+          },
+          {
+            "name": "score",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          },
+          {
+            "name": "roomId",
+            "columnType": 2,
+            "isNullable": false,
+            "dartType": "int"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "constraintName": "ratings_fk_0",
+            "columns": [
+              "roomId"
+            ],
+            "referenceTable": "restrooms",
+            "referenceTableSchema": "public",
+            "referenceColumns": [
+              "id"
+            ],
+            "onUpdate": 3,
+            "onDelete": 3
+          }
+        ],
+        "indexes": [
+          {
+            "indexName": "ratings_pkey",
+            "elements": [
+              {
+                "type": 0,
+                "definition": "id"
+              }
+            ],
+            "type": "btree",
+            "isUnique": true,
+            "isPrimary": true
+          }
+        ],
+        "managed": true
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "columnDropped",
+      "message": "Column \"_restroomsRatingRestroomsId\" of table \"ratings\" will be dropped.",
+      "table": "ratings",
+      "columns": [
+        "_restroomsRatingRestroomsId"
+      ],
+      "destrucive": true
+    },
+    {
+      "type": "tableDropped",
+      "message": "One or more columns are added to table \"ratings\" which cannot be added in a table migration. The complete table will be deleted and recreated.",
+      "table": "ratings",
+      "columns": [
+        "roomId"
+      ],
+      "destrucive": true
+    }
+  ],
+  "migrationApiVersion": 1
+}

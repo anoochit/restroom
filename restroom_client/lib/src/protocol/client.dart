@@ -57,6 +57,20 @@ class EndpointRestroom extends _i1.EndpointRef {
         'registerRoom',
         {'restroom': restroom},
       );
+
+  _i2.Future<List<_i4.Restroom>> getRestRooms() =>
+      caller.callServerEndpoint<List<_i4.Restroom>>(
+        'restroom',
+        'getRestRooms',
+        {},
+      );
+
+  _i2.Future<List<_i4.Restroom>> getRestRoom(int id) =>
+      caller.callServerEndpoint<List<_i4.Restroom>>(
+        'restroom',
+        'getRestRoom',
+        {'id': id},
+      );
 }
 
 class _Modules {

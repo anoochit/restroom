@@ -108,7 +108,35 @@ class Endpoints extends _i1.EndpointDispatch {
             session,
             params['restroom'],
           ),
-        )
+        ),
+        'getRestRooms': _i1.MethodConnector(
+          name: 'getRestRooms',
+          params: {},
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['restroom'] as _i4.RestroomEndpoint)
+                  .getRestRooms(session),
+        ),
+        'getRestRoom': _i1.MethodConnector(
+          name: 'getRestRoom',
+          params: {
+            'id': _i1.ParameterDescription(
+              name: 'id',
+              type: _i1.getType<int>(),
+              nullable: false,
+            )
+          },
+          call: (
+            _i1.Session session,
+            Map<String, dynamic> params,
+          ) async =>
+              (endpoints['restroom'] as _i4.RestroomEndpoint).getRestRoom(
+            session,
+            params['id'],
+          ),
+        ),
       },
     );
     modules['serverpod_auth'] = _i7.Endpoints()..initializeEndpoints(server);
