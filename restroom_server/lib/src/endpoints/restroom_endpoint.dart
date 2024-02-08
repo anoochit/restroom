@@ -2,7 +2,7 @@ import 'package:restroom_server/src/generated/protocol.dart';
 import 'package:serverpod/serverpod.dart';
 
 class RestroomEndpoint extends Endpoint {
-  // register room
+  // register restrooms
   Future<Restroom> registerRoom(Session session, Restroom restroom) async {
     final roomExist = await Restroom.db.find(
       session,
@@ -16,11 +16,13 @@ class RestroomEndpoint extends Endpoint {
     }
   }
 
+  // get restrooms
   Future<List<Restroom>> getRestRooms(Session session) async {
     final restrooms = await Restroom.db.find(session);
     return restrooms;
   }
 
+  // get restroom with rating
   Future<List<Restroom>> getRestRoom(Session session, int id) async {
     final restrooms = await Restroom.db.find(
       session,
